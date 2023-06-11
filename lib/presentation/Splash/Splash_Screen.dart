@@ -1,65 +1,38 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
-import '../../core/utils/color_constant.dart';
-import '../../core/utils/image_constant.dart';
-import '../new_task/new_task.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_ash/core/utils/color_constant.dart';
+import 'package:todo_ash/core/utils/image_constant.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-    _controller.forward();
-
-    // Navigate to the home page after 5 seconds
-    Timer(Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => NewTaskPage(),
-        ),
-      );
+    // Start the timer when the screen is first displayed
+    Timer(Duration(seconds: 2), () {
+      // Navigate to the next screen after 2 seconds
+      Navigator.pushReplacementNamed(context, '/new_task');
     });
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorConstant.whiteA700,
-      body: FadeTransition(
-        opacity: _animation,
-        child: Stack(
-          children: [
-            Container(
-              width: double.maxFinite,
-              child: Image(image: AssetImage(ImageConstant.Splash)),
-            ),
-            Center(
-              child: CircularProgressIndicator(),
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: ColorConstant.whiteA700,
+        body: Center(
+          child: Container(
+            width: double.maxFinite,
+            child: Image(image: AssetImage(ImageConstant.Splash)),
+          ),
         ),
       ),
     );
   }
 }
-

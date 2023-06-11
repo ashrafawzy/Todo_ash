@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:todo_ash/presentation/Splash/Splash_Screen.dart';
+import 'package:flutter/material.dart';
 
+import '../presentation/new_task/new_task.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Todo App',
+      initialRoute: AppRoutes.splashScreen,
+      routes: {
+        AppRoutes.splashScreen: (_) => SplashScreen(),
+        AppRoutes.new_task: (_) => NewTaskPage(),
+        // AppRoutes.list_mode: (_) => ListModeScreen(),
+        // AppRoutes.selected: (_) => SelectedScreen(),
+        // AppRoutes.calendar_mode: (_) => CalendarModeScreen(),
+        // AppRoutes.done_tasks: (_) => DoneTasksScreen(),
+        // AppRoutes.task_details: (_) => TaskDetailsScreen(),
+      },
+    );
+  }
+}
 
 //
 // import '../presentation/Doctor/doctor_page.dart';

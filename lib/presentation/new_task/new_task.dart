@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sqflite_common/sqlite_api.dart';
+import 'package:todo_ash/presentation/Splash/Splash_Screen.dart';
 
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../models/Listviews.dart';
+import '../../modules/DoneTasks/DoneTasks.dart';
 import '../list_mode/list_mode.dart';
 import '../selcted/selcted_cubit/todo_cubit.dart';
 import '../selcted/selcted_cubit/todo_state.dart';
+import '../shared/bloc/cubit.dart';
+import '../shared/bloc/states.dart';
 import 'new_task_cubit/add_todo_cubit.dart';
 
 
@@ -49,15 +54,17 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TaskCubit, TaskState>(
+    return BlocConsumer<appCubit, States>(
         listener: (context, state) {},
     builder: (context, state) {
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
 
         title: Text('New Task',style:TextStyle(color: Colors.black),),
 backgroundColor: Colors.white,
+
         elevation:0 ,
       ),
       body:
@@ -209,7 +216,7 @@ backgroundColor: Colors.white,
                     );
 
 // Add the new task to the state using the addTask cubit
-                    context.read<TaskCubit>().addTask(newTask);
+                    context.read<appCubit>().GetData(newTask as Database);
 
                     // Add the task to a new list of tasks
                     var newTaskList = List<Task>.empty(growable: true);
@@ -221,7 +228,7 @@ backgroundColor: Colors.white,
                     // Navigate to the new page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListMode()),
+                      MaterialPageRoute(builder: (context) => doneTasks()),
                     );
                   },
                   child: Text('Add', style: TextStyle(fontSize: 20)),
