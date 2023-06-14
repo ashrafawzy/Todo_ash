@@ -9,6 +9,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_ash/models/Listviews.dart';
 import 'package:todo_ash/presentation/shared/bloc/states.dart';
 
 import '../../../models/database.dart';
@@ -19,7 +20,7 @@ import '../../new_task/new_task.dart';
 
  class appCubit extends Cubit<States> {
   appCubit(Database db) : super(InitialState());
-
+  List<Task> _tasks = [];
   static appCubit get(context) => BlocProvider.of(context);
 
   int currentIndex = 0;
@@ -37,21 +38,20 @@ import '../../new_task/new_task.dart';
     currentIndex = index;
     emit(ChangeNavBar());
   }
-  Future<void> InsertTask(String ImagePath, String name, String description, String date, String time, String status,
-      {required String Image,
-    required String Name, required String Descraption, required String Date, required String Time, required String imagePath}) async {
-    try {
-      await DatabaseManager().initDatabase();
-      await DatabaseManager().insertTask(ImagePath, name, description, date, time, status);
-      emit(InsertNewTaskSuccessState());
-    } catch (error) {
-      emit(InsertNewTaskErrorState());
-    }
+  void insertTask(String name, String description, String date, String time, String imagePath,) {
+    final newTask = Task(
+      name: name,
+      date: date,
+      time: time,
+      imagePath: imagePath,
+      descraption: description,
+    );
+    _tasks.add(newTask);
+    emit(TasksLoaded(_tasks));
   }
-  Future<void> updateTask(int id, String image, String name, String description, String date, String time) async {
+  Future<void> updateTask(int id, String name, String description, String date, String time, String image) async {
     try {
       await DatabaseManager().initDatabase();
-      await DatabaseManager().updateTask(id, image, name, description, date, time);
       emit(UpdateTaskSuccessState());
     } catch (error) {
       emit(UpdateTaskErrorState());
@@ -61,7 +61,7 @@ import '../../new_task/new_task.dart';
   Future<void> deleteTask(int id) async {
     try {
       await DatabaseManager().initDatabase();
-      await DatabaseManager().deleteTask(id);
+
       emit(DeleteTaskSuccessState());
     } catch (error) {
       emit(DeleteTaskErrorState());

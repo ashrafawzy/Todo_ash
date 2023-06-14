@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
+import '../../models/database.dart';
 import '../list_mode/alltaskspage.dart';
 import '../shared/bloc/cubit.dart';
 import '../shared/bloc/states.dart';
@@ -11,6 +12,7 @@ import '../shared/bloc/states.dart';
 class NewTaskPage extends StatefulWidget {
   @override
   _NewTaskPageState createState() => _NewTaskPageState();
+  final dbManager = DatabaseManager();
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
@@ -223,14 +225,13 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               final time = _selectedTime;
                               final image =
                                   _selectedImage ?? ImageConstant.shoping;
-                              context
-                                  .read<appCubit>()
-                                  .InsertTask(
-                                imagePath:image,
-                                Name: name,
-                                Descraption: description,
-                                Date: date.toString(),
-                                Time: time ?? '', Image: '',
+                              context.read<appCubit>().insertTask(
+
+                                name,
+                                description,
+                                date.toString(),
+                                 time ?? '',
+                                image
                               );
                               Navigator.pushReplacement(
                                 context,

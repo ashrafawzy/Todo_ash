@@ -11,19 +11,19 @@ ImageConstant.parking,
 ];
 
 class TaskModel {
-  final List<Task> taskList;
+  final List<Task> _tasks = [];
 
-  TaskModel({required this.taskList});
+  TaskModel({required String imagePath, required String Name, required String Description, required String Date, required String Time});
 
-  int taskCount() => taskList.length;
+  int taskCount() => _tasks.length;
 }
 class Task {
   String imagePath;
-  String Name;
-  String Descraption;
-  String Date;
-  String Time;
-  Task({required this.imagePath, required this.Name,required this.Descraption,required this.Date,required this.Time});
+  String name;
+  String descraption;
+  String date;
+  String time;
+  Task({required this.imagePath, required this.name,required this.descraption,required this.date,required this.time});
 
   void toggleTask() {
     // isCompleted = isCompleted == true ? false : true;
