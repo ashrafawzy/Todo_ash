@@ -7,17 +7,18 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_ash/presentation/shared/bloc/states.dart';
 
+import '../../../models/database.dart';
 import '../../../modules/ArchivedTasks/ArchivedTasks.dart';
 import '../../../modules/DoneTasks/DoneTasks.dart';
 import '../../../modules/NewTasks/NewTasks.dart';
 import '../../new_task/new_task.dart';
 
-class appCubit extends Cubit<States> {
-  appCubit() : super(InitialState());
+ class appCubit extends Cubit<States> {
+  appCubit(Database db) : super(InitialState());
 
   static appCubit get(context) => BlocProvider.of(context);
 
@@ -36,93 +37,37 @@ class appCubit extends Cubit<States> {
     currentIndex = index;
     emit(ChangeNavBar());
   }
-
-  void ChangebottomSheet({
-    required bool isShown,
-    required IconData icon,
-  }) {
-    // isBottomSheetShown=isShown;
-    // FloatIcon=icon;
+  Future<void> InsertTask(String ImagePath, String name, String description, String date, String time, String status,
+      {required String Image,
+    required String Name, required String Descraption, required String Date, required String Time, required String imagePath}) async {
+    try {
+      await DatabaseManager().initDatabase();
+      await DatabaseManager().insertTask(ImagePath, name, description, date, time, status);
+      emit(InsertNewTaskSuccessState());
+    } catch (error) {
+      emit(InsertNewTaskErrorState());
+    }
+  }
+  Future<void> updateTask(int id, String image, String name, String description, String date, String time) async {
+    try {
+      await DatabaseManager().initDatabase();
+      await DatabaseManager().updateTask(id, image, name, description, date, time);
+      emit(UpdateTaskSuccessState());
+    } catch (error) {
+      emit(UpdateTaskErrorState());
+    }
   }
 
-  void CreateDataBase() {
-    openDatabase('todoDB', version: 1,
-        onCreate: (Database db, int version) async {
-          print("DB created");
-          await db.execute(
-              'CREATE TABLE Tasks (id INTEGER PRIMARY KEY, Image.png, Name TEXT,Descraption TEXT,Date TEXT, Time TEXT, status TEXT)')
-              .then((value) {
-            print("table created");
-          }).catchError((err) {
-            print("error ${err}");
-          });
-        },
-        onOpen: (db) {
-          GetData(db);
-          print("db opened");
-        }).then((value) {
-      db = value;
-      emit(CreateDB());
-    });
+  Future<void> deleteTask(int id) async {
+    try {
+      await DatabaseManager().initDatabase();
+      await DatabaseManager().deleteTask(id);
+      emit(DeleteTaskSuccessState());
+    } catch (error) {
+      emit(DeleteTaskErrorState());
+    }
   }
 
-  void GetData(Database db) {
-    NewTasks = [];
-    DoneTasks = [];
-    ArchivedTasks = [];
-    db.rawQuery('SELECT * FROM tasks').then((value) {
-      emit(GetDatafromDB());
-      value.forEach((element) {
-        if (element['status'] == 'new') {
-          NewTasks.add(element);
-        }
-        else if (element['status'] == 'done') {
-          DoneTasks.add(element);
-        }
-        else {
-          ArchivedTasks.add(element);
-        }
-      });
-    });
-  }
-
-  Future<void> InsertIntoDataBase({
-    required String Image,
-    required String Name,
-    required String Descraption,
-    required String Date,
-    required String Time,
-  }) async {
-    return await db.transaction((txn) async {
-      int id = await txn.rawInsert(
-          'INSERT INTO Tasks(image,Name, Descraption, Date, Time) '
-              'VALUES("$Image","$Name", "$Descraption", "$Date", "$Time")');
-      print('Inserted row id: $id');
-    });
-  }
-
-  Future<void> DeleteFromDataBase({required int id}) async {
-    await db.rawDelete('DELETE FROM tasks WHERE id = ?', [id]).then((value) {
-      emit(DeleteFromDB());
-      print("db deleted");
-      GetData(db);
-    });
-  }
-
-  void UpdateDataBase({
-    required int id,
-    required String Image,
-    required String Name,
-    required String Descraption,
-    required String Date,
-    required String Time,
-  }) {
-    db.rawUpdate('UPDATE tasks SET image = ?, Name = ?, Descraption = ?, Date = ?, Time = ? WHERE id = ?',
-        ['$Image', '$Name', '$Descraption', '$Date', '$Time', id]).then((value) {
-      print("db updated");
-      emit(UpdateDB());
-      GetData(db);
-      emit(GetDatafromDB());
-    });
-  }
 }
+
+

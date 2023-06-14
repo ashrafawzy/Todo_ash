@@ -20,4 +20,9 @@ class ChangeBottomSheetState extends States{}
 
 class AppGetDatabaseLoadingState extends States{}
 
-
+class InsertNewTaskSuccessState extends States{}
+class InsertNewTaskErrorState extends States{}
+class UpdateTaskSuccessState extends States{}
+class UpdateTaskErrorState extends States{}
+class DeleteTaskSuccessState extends States{}
+class DeleteTaskErrorState extends States{}

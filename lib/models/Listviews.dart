@@ -1,7 +1,7 @@
 import '../core/utils/image_constant.dart';
 import 'database.dart';
 
-List<String> _images = [
+List<String> images = [
   ImageConstant.shoping,
   ImageConstant.basket,
 ImageConstant.parking,
@@ -18,12 +18,12 @@ class TaskModel {
   int taskCount() => taskList.length;
 }
 class Task {
-  String Image;
+  String imagePath;
   String Name;
   String Descraption;
   String Date;
   String Time;
-  Task({required this.Image, required this.Name,required this.Descraption,required this.Date,required this.Time});
+  Task({required this.imagePath, required this.Name,required this.Descraption,required this.Date,required this.Time});
 
   void toggleTask() {
     // isCompleted = isCompleted == true ? false : true;
