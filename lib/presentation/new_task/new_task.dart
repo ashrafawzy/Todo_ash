@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/todo_bloc.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
-import '../../models/database.dart';
+import '../../database/db_helper.dart';
+
 import '../list_mode/alltaskspage.dart';
 import '../shared/bloc/cubit.dart';
 import '../shared/bloc/states.dart';
@@ -12,7 +14,7 @@ import '../shared/bloc/states.dart';
 class NewTaskPage extends StatefulWidget {
   @override
   _NewTaskPageState createState() => _NewTaskPageState();
-  final dbManager = DatabaseManager();
+  final dbHelper = DBHelper();
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
@@ -24,9 +26,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
   late GlobalKey<FormState> _formKey;
 
   var _nameController = TextEditingController();
-  var _descriptionController = TextEditingController();
-  var _dateController = TextEditingController();
-  var _timeController = TextEditingController();
+  var _descController = TextEditingController();
+
 
   List<String> _images = [
     ImageConstant.shoping,
@@ -44,12 +45,14 @@ class _NewTaskPageState extends State<NewTaskPage> {
     _selectedDate = 'Today';
     _selectedTime = '9:00 AM';
   }
-
+  void add() {
+    // TODO: implement initState
+    super.initState();
+    TodoBloc.get(context).add(AddDataEvent(name: '', desc: '', date: '', time: '', imagePath: ''));
+  }
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<appCubit, States>(
-      listener: (context, state) {},
-      builder: (context, state) {
+
         return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
@@ -70,31 +73,39 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     padding: const EdgeInsets.only(left: 15, top: 20),
                     child: Text('Icons'),
                   ),
+
                   SizedBox(
-                    height: 40,
-                    child: Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(top: 8.0),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedImage = _images[index];
-                              });
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10.0, top: 5),
-                              child: SizedBox(
-                                width: 55.0,
-                                child: Image(
-                                    image: AssetImage(_images[index])),
-                              ),
+                    height: 70.0,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 8.0),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _images.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedImage = _images[index];
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0, top: 5),
+                            child: Stack(
+                              children: [
+                                SizedBox(
+                                  width: 55.0,
+                                  child: Image(image: AssetImage(_images[index])),
+                                ),
+                                if (_selectedImage == _images[index])
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Icon(Icons.add_circle, color: Colors.black, size: 16.0),
+                                  ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -125,7 +136,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     ),
                     child: TextFormField(
                       maxLines: 4,
-                      controller: _descriptionController,
+                      controller: _descController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a description';
@@ -215,34 +226,28 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         borderRadius: BorderRadius.circular(30),
                         gradient: ColorConstant.gradient,
                       ),
+
                       child: ElevatedButton(
                         onPressed: () {
-                          try {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              final name = _nameController.text;
-                              final description = _descriptionController.text;
-                              final date = _selectedDate;
-                              final time = _selectedTime;
-                              final image =
-                                  _selectedImage ?? ImageConstant.shoping;
-                              context.read<appCubit>().insertTask(
+    context.read<TodoBloc>().add(
+    AddDataEvent(
 
-                                name,
-                                description,
-                                date.toString(),
-                                 time ?? '',
-                                image
-                              );
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllTasksPage()),
-                              );
-                            }
-                          } catch (e) {
-                            print('An error occurred: $e');
-                          }
-                        },
+    name: _nameController.text,
+                           desc: _descController.text, date:_selectedTime='', time: _selectedTime='', imagePath:_selectedImage= '' ,
+
+    )
+                            // await DBHelper.insert('todo', data);
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //     content: Text('New task added successfully'),
+                            //   ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => AllTasksPage()),
+                            );
+                          },
+
                         child: Text('Add', style: TextStyle(fontSize: 20)),
                         style: ElevatedButton.styleFrom(
                           primary: Colors.transparent,
@@ -259,7 +264,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
             ),
           ),
         );
-      },
-    );
+
   }
 }

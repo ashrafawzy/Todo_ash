@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../presentation/list_mode/alltaskspage.dart';
 import '../presentation/new_task/new_task.dart';
+import '../presentation/selcted/selected.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.splashScreen: (_) => SplashScreen(),
         AppRoutes.new_task: (_) => NewTaskPage(),
         AppRoutes.alltaskspage: (_) => AllTasksPage(),
-        // AppRoutes.selected: (_) => SelectedScreen(),
+        // AppRoutes. SelectPage: (_) =>  SelectPage(),
         // AppRoutes.calendar_mode: (_) => CalendarModeScreen(),
         // AppRoutes.done_tasks: (_) => DoneTasksScreen(),
         // AppRoutes.task_details: (_) => TaskDetailsScreen(),
@@ -31,7 +32,7 @@ class AppRoutes {
   static const String splashScreen = '/splash_screen';
   static const String new_task = '/new_task';
   static const String alltaskspage = '/alltaskspage';
-  static const String selected = '/selected';
+  static const String  SelectPage = '/ SelectPage';
   static const String calendar_mode = '/calendar_mode';
   static const String done_tasks = '/done_tasks';
   static const String task_details = '/task_details';

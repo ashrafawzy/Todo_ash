@@ -115,6 +115,20 @@ class ColorConstant {
       fromHex('#254DDE'),
     ],
   );
+  static final LinearGradient gradient_vaiolet = LinearGradient(
+    colors: [
+      fromHex('#FE1E9A'),
+      fromHex('#254DDE'),
+
+    ],
+
+  );
+  static final LinearGradient gradient_black = LinearGradient(
+      colors: [
+        fromHex('#181743'),
+        fromHex('#88889F'),
+
+      ],);
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

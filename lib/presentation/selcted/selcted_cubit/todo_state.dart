@@ -1,17 +1,26 @@
-// abstract class AppStates {}
-//
-// class AppInitialState extends AppStates {}
-//
-// class AppChangeBottomNavBarState extends AppStates {}
-//
-// class AppCreateDatabaseState extends AppStates {}
-//
-// class AppInsertDatabaseState extends AppStates {}
-//
-// class AppGetDatabaseState extends AppStates {}
-//
-// class AppChangeBottomSheetState extends AppStates {}
-//
-// class AppUpdateDatabaseState extends AppStates {}
-//
-// class AppDeleteDatabaseState extends AppStates {}
+
+
+abstract class States {}
+
+class InitialState extends States {}
+
+class ChangeNavBar extends States {}
+
+class InsertTaskSuccessState extends States {}
+
+class UpdateTaskSuccessState extends States {}
+
+class UpdateTaskErrorState extends States {}
+
+class DeleteTaskSuccessState extends States {}
+
+class DeleteTaskErrorState extends States {}
+
+class TasksLoading extends States {}
+
+
+
+
+class ToggleDoneSuccessState extends States {}
+
+class ToggleArchiveSuccessState extends States {}

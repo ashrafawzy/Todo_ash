@@ -1,90 +1,123 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_ash/presentation/new_task/new_task.dart';
 import 'package:todo_ash/presentation/shared/bloc/states.dart';
 import 'package:flutter/material.dart';
+import '../../bloc/todo_bloc.dart';
+
+import '../../core/utils/color_constant.dart';
+import '../../database/db_helper.dart';
+import '../selcted/selected.dart';
 import '../shared/bloc/cubit.dart';
-class AllTasksPage extends StatelessWidget {
+import '../shared/bloc/states.dart';
+class AllTasksPage extends StatefulWidget {
+  @override
+  _AllTasksPageState createState() => _AllTasksPageState();
+}
+
+class _AllTasksPageState extends State<AllTasksPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    TodoBloc.get(context).add(ShowDataEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('All Tasks'),
       ),
-      body: BlocBuilder<appCubit, States>(
+      body: BlocBuilder<TodoBloc, TodoState>(
         builder: (context, state) {
-          if (state is GetDatafromDB) {
-            final newTasks = (context.read<appCubit>().NewTasks);
-            final doneTasks = (context.read<appCubit>().DoneTasks);
-            final archivedTasks = (context.read<appCubit>().ArchivedTasks);
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: doneTasks.length,
-                    itemBuilder: (context, index) {
-                      final task = doneTasks[index];
-                      return ListTile(
-                        leading: Image(image: AssetImage(task[Image])),
-                        title: Text(task['Name']),
-                        subtitle: Text(task['Descraption']),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(task['Date']),
-                            Text(task['Time']),
-                          ],
+          if (state is TodoLoadedState) {
+            return ListView.builder(
+              itemCount: state.tasklist.length,
+              itemBuilder: (context, index) {
+                final helper = state.tasklist[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        ListTile(
+                          leading: Image(image: ExactAssetImage(helper.imagePath as String)),
+                          title: Text(helper.name),
+                          subtitle: Text(helper.desc),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(helper.date),
+                              Text(helper.time),
+                            ],
+                          ),
                         ),
-                      );
-                    },
+                      ],
+                    ),
                   ),
-                ),
-                // Expanded(
-                //   child: ListView.builder(
-                //     itemCount: doneTasks.length,
-                //     itemBuilder: (context, index) {
-                //       final task = doneTasks[index];
-                //       return ListTile(
-                //         leading: Image(image: AssetImage(task[Image])),
-                //         title: Text(task['Name']),
-                //         subtitle: Text(task['Descraption']),
-                //         trailing: Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Text(task['Date']),
-                //             Text(task['Time']),
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
-                // Expanded(
-                //   child: ListView.builder(
-                //     itemCount: archivedTasks.length,
-                //     itemBuilder: (context, index) {
-                //       final task = archivedTasks[index];
-                //       return ListTile(
-                //         leading: Image(image: AssetImage(task[Image])),
-                //         title: Text(task['Name']),
-                //         subtitle: Text(task['Descraption']),
-                //         trailing: Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Text(task['Date']),
-                //             Text(task['Time']),
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
-              ],
+                );
+              },
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
         },
+      ),
+      bottomNavigationBar: BottomAppBar(height: 65,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: ColorConstant.gradient_vaiolet
+
+              ),
+              child: IconButton(
+                icon: Icon(Icons.check_sharp,color: Colors.white,),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewTaskPage()),
+                  );
+                },
+              ),
+            ),
+            Container(height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+               color:ColorConstant.whiteA70000
+
+              ),
+              child: IconButton(
+                icon: Icon(Icons.calendar_today_outlined,color: Colors.red,),
+                onPressed: () {
+                },
+              ),
+            ),
+            Container(height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: ColorConstant.gradient
+
+              ),
+              child: IconButton(
+                icon: Icon(Icons.add,color: Colors.white),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => NewTaskPage()));
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
