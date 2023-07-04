@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../core/utils/image_constant.dart';
-import 'database.dart';
+
 
 List<String> _images = [
   ImageConstant.shoping,
@@ -12,14 +12,15 @@ ImageConstant.parking,
   ImageConstant.dote,
 ];
 class TaskModel {
+
   final int id;
   final String name;
   final String desc;
   final String date;
   final String time;
   final String imagePath;
-
-  TaskModel({
+ final bool? isCompleted;
+  TaskModel( {
     final List<Task>? taskList,
 
     required this.id,
@@ -28,7 +29,7 @@ class TaskModel {
     required this.date,
     required this.time,
     required this.imagePath,
-
+    required this.isCompleted,
   });
 
   Map<String, dynamic> toMap() {
@@ -39,6 +40,7 @@ class TaskModel {
       'date': date,
       'time': time,
       'imagePath': imagePath,
+      '':isCompleted
     };
   }
 
@@ -49,7 +51,7 @@ class TaskModel {
       desc: map['desc'],
       date: map['date'],
       time: map['time'],
-      imagePath: map['imagePath'],
+      imagePath: map['imagePath'], isCompleted:  map['isCompleted'],
     );
 
   }
@@ -69,10 +71,12 @@ class Task {
   String date;
   String time;
   String imagePath;
-  Task({ required this.id,required this.name,required this.desc,required this.date,required this.time,required this.imagePath});
+  bool? isCompleted;
+  Task({ required this.id,required this.name,required this.desc,required this.date,required this.time
+  ,required this.imagePath,required this.isCompleted});
 
   @override
-  List<Object?> get props => [id, name, desc, date, time, imagePath];
+  List<Object?> get props => [id, name, desc, date, time, imagePath,isCompleted];
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
@@ -82,6 +86,7 @@ class Task {
       date: map['date'],
       time: map['time'],
       imagePath: map['imagePath'],
+isCompleted: map['isCompleted']
     );
   }
 

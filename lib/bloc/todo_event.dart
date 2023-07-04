@@ -9,7 +9,7 @@ abstract class TodoEvent extends Equatable {
 
 class ShowDataEvent extends TodoEvent {
   @override
-  // TODO: implement props
+
   List<Object?> get props =>[];
 
 }
@@ -20,6 +20,7 @@ class AddDataEvent extends TodoEvent {
   final String date;
   final String time;
   final String imagePath;
+  final bool isCompleted;
 
   const AddDataEvent({
     required this.name,
@@ -27,13 +28,14 @@ class AddDataEvent extends TodoEvent {
     required this.date,
     required this.time,
     required this.imagePath,
+    required this.isCompleted
   });
 
   @override
   @override
   List<Object?> get props => [TaskModel];
 
-  get TaskModel => Task( name: name, desc: desc, date: date, time: time, imagePath: imagePath, id: '');
+  get TaskModel => Task( name: name, desc: desc, date: date, time: time, imagePath: imagePath,isCompleted: isCompleted, id: '');
 
   AddDataEvent copyWith({
     String? name,
@@ -41,6 +43,7 @@ class AddDataEvent extends TodoEvent {
     String? date,
     String? time,
     String? imagePath,
+    bool? isCompleted
 
   }) {
     return AddDataEvent(
@@ -48,7 +51,8 @@ class AddDataEvent extends TodoEvent {
       desc: desc ?? this.desc,
       date: date ?? this.date,
       time: desc ?? this.time,
-      imagePath: date ?? this.imagePath,
+      imagePath: imagePath ?? this.imagePath,
+      isCompleted: isCompleted ?? this.isCompleted
     );
   }
 }
@@ -61,7 +65,9 @@ class UpdateDataEvent extends TodoEvent {
   @override
   List<Object?> get props => [taskModel];
 }
-
+class DeleteSelectedEvent extends TodoEvent {
+  int get selectedTaskId => null!;
+}
 class DeleteDataEvent extends TodoEvent {
   final String id;
 

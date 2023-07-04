@@ -1,14 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_ash/presentation/new_task/new_task.dart';
-import 'package:todo_ash/presentation/shared/bloc/states.dart';
+
 import 'package:flutter/material.dart';
 import '../../bloc/todo_bloc.dart';
 
 import '../../core/utils/color_constant.dart';
 import '../../database/db_helper.dart';
 import '../selcted/selected.dart';
-import '../shared/bloc/cubit.dart';
-import '../shared/bloc/states.dart';
+
 class AllTasksPage extends StatefulWidget {
   @override
   _AllTasksPageState createState() => _AllTasksPageState();
@@ -17,9 +16,8 @@ class AllTasksPage extends StatefulWidget {
 class _AllTasksPageState extends State<AllTasksPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    TodoBloc.get(context).add(ShowDataEvent());
+    context.read<TodoBloc>().add(ShowDataEvent());
   }
 
   @override
@@ -32,9 +30,9 @@ class _AllTasksPageState extends State<AllTasksPage> {
         builder: (context, state) {
           if (state is TodoLoadedState) {
             return ListView.builder(
-              itemCount: state.tasklist.length,
+              itemCount: state.todoItems.length,
               itemBuilder: (context, index) {
-                final helper = state.tasklist[index];
+                final helper = state.todoItems[index];
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -43,9 +41,9 @@ class _AllTasksPageState extends State<AllTasksPage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         ListTile(
-                          leading: Image(image: ExactAssetImage(helper.imagePath as String)),
+                          leading:Image.asset(helper.imagePath),
                           title: Text(helper.name),
-                          subtitle: Text(helper.desc),
+                          subtitle: Text(helper.desc??'null'),
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -112,7 +110,7 @@ class _AllTasksPageState extends State<AllTasksPage> {
                 onPressed: () {
                   Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => NewTaskPage()));
+                      MaterialPageRoute(builder: (context) => SelectedPage()));
                 },
               ),
             ),

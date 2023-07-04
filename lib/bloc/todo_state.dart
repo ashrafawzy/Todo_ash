@@ -1,30 +1,21 @@
 part of 'todo_bloc.dart';
 
 class TodoState extends Equatable {
-  final List<TaskModel> taskList;
-
-  const TodoState({required this.taskList});
 
   @override
-  List<Object?> get props => [taskList];
-  Stream<TodoState> _mapAddDataEventToState(AddDataEvent event) async* {
-    final TaskModel = event.TaskModel;
+  final List<TaskModel> todoItems;
 
+  TodoState({required this.todoItems});
 
+  @override
+  List<Object?> get props => [todoItems];
 
-    final taskList = await DBHelper.selectAll(DBHelper.dbName);
-
-    final Task =
-    taskList.map((e) => TaskModel.fromMap(e)).toList();
-
-
-  }
 }
 class TodoLoadedState extends TodoState {
-  final List<Task> tasklist;
+  final List<TaskModel> tasklist;
 
-  TodoLoadedState(updatedList, this.tasklist, {  required todoModel, required List<Task> Task, required super.taskList}) ;
+  TodoLoadedState(this.tasklist, {required List<TaskModel> list, required List<TaskModel> todoItems, required List todoItemsList} ) : super(todoItems: null!) ;
 
   @override
-  List<Object> get props => [taskList];
+  List<Object> get props => [tasklist];
 }

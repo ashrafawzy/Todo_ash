@@ -5,7 +5,6 @@ import 'package:todo_ash/presentation/Splash/Splash_Screen.dart';
 import 'package:todo_ash/presentation/list_mode/alltaskspage.dart';
 import 'package:todo_ash/presentation/new_task/new_task.dart';
 import 'package:todo_ash/presentation/selcted/selected.dart';
-import 'package:todo_ash/presentation/shared/bloc/cubit.dart';
 import 'package:todo_ash/routes/app_routes.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
